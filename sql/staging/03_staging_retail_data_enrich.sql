@@ -13,7 +13,8 @@ SELECT [invoice_number]
              END
         ) as invoice_type
       ,[stock_code]
-      ,(CASE WHEN stock_code IN ('B', 'M','ADJUST','ADJUST2') THEN 'Adjustment'
+      ,(CASE WHEN stock_code IN ('M','ADJUST','ADJUST2') THEN 'Adjustment'
+             WHEN stock_code = 'B' THEN 'Bad debt'
              WHEN stock_code = 'D' THEN 'Discount'
              WHEN stock_code = 'S' THEN 'Samples'
              WHEN stock_code IN ('AMAZONFEE','CRUK') THEN 'Fee'
