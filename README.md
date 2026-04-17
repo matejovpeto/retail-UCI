@@ -450,7 +450,7 @@ This page focuses on high-level performance:
 
 ### Customers and Regions
 
-![Customers and Regions](customers&regions.png)
+![Customers and Regions](customers-regions.png)
 
 
 
