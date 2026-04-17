@@ -1,126 +1,126 @@
-\# 📊 Online Retail II – Data Analysis Project
+# 📊 Online Retail II – Data Analysis Project
 
 
 
-\## 📌 Overview
+## 📌 Overview
 
-This project analyzes a messy transactional dataset containing all transactions for a UK-based e-commerce business between \*\*01/12/2009\*\* and \*\*09/12/2011\*\*.
+This project analyzes a messy transactional dataset containing all transactions for a UK-based e-commerce business between **01/12/2009** and **09/12/2011**.
 
 
 
 The goal of the project was to:
 
-\- explore and understand the dataset
+- explore and understand the dataset
 
-\- clean and transform the data into a usable format
+- clean and transform the data into a usable format
 
-\- design a data model
+- design a data model
 
-\- build a Power BI report with business-relevant KPIs
+- build a Power BI report with business-relevant KPIs
 
 
 
 The project covers:
 
-\- data transformation in SQL
+- data transformation in SQL
 
-\- data modelling (star schema)
+- data modelling (star schema)
 
-\- visualisations in Power BI
+- visualisations in Power BI
 
-\- KPI definition and calculation
-
-
-
-\---
+- KPI definition and calculation
 
 
 
-\## 🛠️ Tech Stack
-
-\- SQL Server
-
-\- Power BI
-
-\- DAX
+---
 
 
 
-\---
+## 🛠️ Tech Stack
+
+- SQL Server
+
+- Power BI
+
+- DAX
 
 
 
-\## 🗂️ Data Model
-
-A \*\*star schema\*\* was used for this project.
+---
 
 
 
-\### Fact Table
+## 🗂️ Data Model
 
-\#### `fact\_transactions`
+A **star schema** was used for this project.
 
-\- Grain: \*\*1 row = 1 transaction line per invoice and product\*\*
 
-\- Contains:
 
-&#x20; - `invoice\_number`
+### Fact Table
 
-&#x20; - `invoice\_type`
+#### `fact_transactions`
+
+- Grain: **1 row = 1 transaction line per invoice and product**
+
+- Contains:
+
+&#x20; - `invoice_number`
+
+&#x20; - `invoice_type`
 
 &#x20; - `quantity`
 
-&#x20; - `invoice\_datetime`
+&#x20; - `invoice_datetime`
 
-&#x20; - `unit\_price`
+&#x20; - `unit_price`
 
 &#x20; - `revenue`
 
-&#x20; - `product\_id` (FK)
+&#x20; - `product_id` (FK)
 
-&#x20; - `customer\_dim\_id` (FK)
-
-
-
-\### Dimension Tables
+&#x20; - `customer_dim_id` (FK)
 
 
 
-\#### `dim\_calendar`
-
-\- Created in Power BI
-
-\- Used for time intelligence (YTD, PY YTD, YoY, monthly trends)
+### Dimension Tables
 
 
 
-\#### `dim\_customer`
+#### `dim_calendar`
 
-\- `customer\_id`
+- Created in Power BI
 
-\- `customer\_country`
-
-\- `customer\_continent`
-
-\- `customer\_subregion`
-
-\- `customer\_dim\_id`
+- Used for time intelligence (YTD, PY YTD, YoY, monthly trends)
 
 
 
-> ⚠️ \*\*Note\*\*  
+#### `dim_customer`
 
-> More than \*\*20% of `customer\_id` values are missing\*\* in the source data.  
+- `customer_id`
+
+- `customer_country`
+
+- `customer_continent`
+
+- `customer_subregion`
+
+- `customer_dim_id`
+
+
+
+> ⚠️ **Note**  
+
+> More than **20% of `customer_id` values are missing** in the source data.  
 
 > These rows were preserved because they still represent valid business transactions.  
 
-> Missing customers are represented as \*\*Unknown\*\* and grouped by geography.  
+> Missing customers are represented as **Unknown** and grouped by geography.  
 
 >
 
 > As a result:
 
-> - customer counts are \*\*indicative rather than exact\*\*
+> - customer counts are **indicative rather than exact**
 
 > - one real unidentified customer cannot be tracked uniquely
 
@@ -128,33 +128,33 @@ A \*\*star schema\*\* was used for this project.
 
 
 
-\#### `dim\_product`
+#### `dim_product`
 
-\- `product\_id`
+- `product_id`
 
-\- `stock\_code`
+- `stock_code`
 
-\- `product\_type`
+- `product_type`
 
-\- `product\_description`
+- `product_description`
 
-\- `revenue\_class`
-
-
-
-> \*\*Note\*\*  
-
-> Some `stock\_code` values appeared under multiple naming variations in `product\_description`.  
-
-> To keep one product row per `stock\_code`, the most frequent description was selected using a frequency-based deduplication approach.
+- `revenue_class`
 
 
 
-\---
+> **Note**  
+
+> Some `stock_code` values appeared under multiple naming variations in `product_description`.  
+
+> To keep one product row per `stock_code`, the most frequent description was selected using a frequency-based deduplication approach.
 
 
 
-\## 🧹 Data Challenges and SQL Approach
+---
+
+
+
+## 🧹 Data Challenges and SQL Approach
 
 
 
@@ -162,65 +162,65 @@ The dataset required substantial cleaning and interpretation before it could be 
 
 
 
-\### 1. Inconsistent Transaction Types
+### 1. Inconsistent Transaction Types
 
 The dataset contains multiple types of transactions mixed together:
 
-\- normal invoices
+- normal invoices
 
-\- credit memos / returns / cancellations
+- credit memos / returns / cancellations
 
-\- bad debt adjustments
+- bad debt adjustments
 
-\- shipping charges
+- shipping charges
 
-\- vouchers / discounts
+- vouchers / discounts
 
-\- fees and bank charges
+- fees and bank charges
 
-\- samples
+- samples
 
 
 
-\### Approach
+### Approach
 
 Two classification layers were created:
 
 
 
-\#### `invoice\_type`
+#### `invoice_type`
 
-Based on `invoice\_number`:
+Based on `invoice_number`:
 
-\- `Invoice`
+- `Invoice`
 
-\- `Credit Memo`
+- `Credit Memo`
 
-\- `Bad debt`
+- `Bad debt`
 
 
 
-\#### `product\_type`
+#### `product_type`
 
-Based on `stock\_code`:
+Based on `stock_code`:
 
-\- `Product`
+- `Product`
 
-\- `Shipping`
+- `Shipping`
 
-\- `Voucher`
+- `Voucher`
 
-\- `Discount`
+- `Discount`
 
-\- `Adjustment`
+- `Adjustment`
 
-\- `Bank Charges`
+- `Bank Charges`
 
-\- `Fee`
+- `Fee`
 
-\- `Samples`
+- `Samples`
 
-\- `Bad debt`
+- `Bad debt`
 
 
 
@@ -228,123 +228,123 @@ This made it possible to interpret the dataset more like a real business transac
 
 
 
-\---
+---
 
 
 
-\### 2. Revenue Definition
+### 2. Revenue Definition
 
 Revenue was not directly available as a reliable business metric.
 
 
 
-\### Approach
+### Approach
 
-Revenue was defined as `quantity \* unit\_price`.
+Revenue was defined as `quantity * unit_price`.
 
 
 
 Additional logic was needed:
 
-\- \*\*Credit memos\*\* remained negative through quantity
+- **Credit memos** remained negative through quantity
 
-\- \*\*Vouchers\*\* were sign-adjusted to reduce shipping-related revenue
+- **Vouchers** were sign-adjusted to reduce shipping-related revenue
 
-\- \*\*Bad debt\*\* was classified as \*\*Non-Revenue\*\*
+- **Bad debt** was classified as **Non-Revenue**
 
-\- \*\*Fees, bank charges, and samples\*\* were kept in the model, but separated from product-relevant revenue
-
-
-
-\---
+- **Fees, bank charges, and samples** were kept in the model, but separated from product-relevant revenue
 
 
 
-\### 3. Revenue Classification
-
-A separate `revenue\_class` was introduced to distinguish different revenue buckets:
+---
 
 
 
-\- `Gross`
+### 3. Revenue Classification
 
-\- `Gross/Net`
-
-\- `Non-Revenue`
+A separate `revenue_class` was introduced to distinguish different revenue buckets:
 
 
 
-\### Logic
+- `Gross`
 
-\- \*\*Gross/Net\*\* → regular product sales
+- `Gross/Net`
 
-\- \*\*Gross\*\* → products, shipping, vouchers, discounts, adjustments
+- `Non-Revenue`
 
-\- \*\*Non-Revenue\*\* → fees, bank charges, samples, bad debt
+
+
+### Logic
+
+- **Gross/Net** → regular product sales
+
+- **Gross** → products, shipping, vouchers, discounts, adjustments
+
+- **Non-Revenue** → fees, bank charges, samples, bad debt
 
 
 
 This made it possible to calculate:
 
-\- \*\*Product Revenue\*\*
+- **Product Revenue**
 
-\- \*\*Gross Revenue\*\*
+- **Gross Revenue**
 
-\- \*\*Non-Revenue Transactions\*\*
-
-
-
-\---
+- **Non-Revenue Transactions**
 
 
 
-\### 4. Missing and Invalid Data
+---
+
+
+
+### 4. Missing and Invalid Data
 
 Several issues were identified in the raw data:
 
-\- rows with `unit\_price = 0`
+- rows with `unit_price = 0`
 
-\- test products (`TEST%`)
+- test products (`TEST%`)
 
-\- missing product descriptions
+- missing product descriptions
 
-\- rows with missing customer IDs
+- rows with missing customer IDs
 
-\- negative rows that required interpretation
-
-
-
-\### Approach
-
-\- removed rows with `unit\_price = 0`
-
-\- removed obvious test products
-
-\- preserved meaningful negative rows such as returns / credit memos
-
-\- preserved rows with missing `customer\_id` because they still represented valid business transactions
+- negative rows that required interpretation
 
 
 
-\---
+### Approach
+
+- removed rows with `unit_price = 0`
+
+- removed obvious test products
+
+- preserved meaningful negative rows such as returns / credit memos
+
+- preserved rows with missing `customer_id` because they still represented valid business transactions
 
 
 
-\### 5. Product Duplication
-
-Some `stock\_code` values were linked to multiple naming variations in `product\_description`.
+---
 
 
 
-\### Approach
+### 5. Product Duplication
+
+Some `stock_code` values were linked to multiple naming variations in `product_description`.
+
+
+
+### Approach
 
 Instead of deleting transaction rows, product descriptions were deduplicated only in the product dimension:
 
-\- grouped by `stock\_code`, `product\_type`, and `product\_description`
+- grouped by `stock_code`, `product_type`, and `product_description`
 
-\- counted occurrences
+- counted occurrences
 
-\- selected the most frequent description per `stock\_code`
+- selected the most frequent description per `stock_code`
 
 
 
@@ -352,59 +352,59 @@ This preserved transaction history while keeping the product dimension clean.
 
 
 
-\---
+---
 
 
 
-\### 6. Customer Identity Issues
+### 6. Customer Identity Issues
 
-The source dataset does not allow exact customer tracking for all rows because many `customer\_id` values are missing.
+The source dataset does not allow exact customer tracking for all rows because many `customer_id` values are missing.
 
 
 
-\### Approach
+### Approach
 
-\- missing customer IDs were preserved as `Unknown`
+- missing customer IDs were preserved as `Unknown`
 
-\- customer geography was still retained
+- customer geography was still retained
 
-\- a surrogate key `customer\_dim\_id` was introduced in `dim\_customer`
+- a surrogate key `customer_dim_id` was introduced in `dim_customer`
 
 
 
 This allowed:
 
-\- geographic analysis
+- geographic analysis
 
-\- customer segmentation with limitations
+- customer segmentation with limitations
 
-\- retention of a large volume of valid data that would otherwise be lost
-
-
-
-\---
+- retention of a large volume of valid data that would otherwise be lost
 
 
 
-\## 📊 Power BI Challenges and Approach
+---
 
 
 
-\### Customer Metrics Limitation
+## 📊 Power BI Challenges and Approach
+
+
+
+### Customer Metrics Limitation
 
 Because `Unknown` customers were preserved, customer metrics are directionally useful but not exact.
 
 
 
-\### Impact
+### Impact
 
 Metrics such as:
 
-\- `Total Customers`
+- `Total Customers`
 
-\- `Active Customers`
+- `Active Customers`
 
-\- `Revenue per Customer`
+- `Revenue per Customer`
 
 
 
@@ -412,89 +412,89 @@ must be interpreted with caution.
 
 
 
-\### Why they were still kept
+### Why they were still kept
 
 Removing all missing-customer rows would have significantly reduced the analytical value of the dataset and hidden a meaningful portion of the business activity.
 
 
 
-\---
+---
 
 
 
-\## 📸 Dashboard
+## 📸 Dashboard
 
 
 
-\### Overview
+### Overview
 
-!\[Overview](overview.png)
+![Overview](overview.png)
 
 
 
 This page focuses on high-level performance:
 
-\- Gross Revenue YoY
+- Gross Revenue YoY
 
-\- Product Revenue YoY
+- Product Revenue YoY
 
-\- Total Invoices
+- Total Invoices
 
-\- Credit Memo Share
+- Credit Memo Share
 
-\- Gross vs Non-Revenue trend
+- Gross vs Non-Revenue trend
 
-\- monthly product revenue comparison
+- monthly product revenue comparison
 
 
 
-\### Customers and Regions
+### Customers and Regions
 
-!\[Customers and Regions](customers\&regions.png)
+![Customers and Regions](customers&regions.png)
 
 
 
 This page focuses on geographic customer distribution:
 
-\- Product Revenue split by continent and subregion
+- Product Revenue split by continent and subregion
 
-\- Total Customers
+- Total Customers
 
-\- Active Customers YoY
+- Active Customers YoY
 
-\- Top countries by Product Revenue
+- Top countries by Product Revenue
 
 
 
-> \*\*Note\*\*  
+> **Note**  
 
 > Customer-related metrics on this page are affected by the preserved `Unknown` customer logic and should be interpreted as indicative rather than exact.
 
 
 
-\### Product
+### Product
 
-!\[Product](product.png)
+![Product](product.png)
 
 
 
 This page focuses on product and transaction mix:
 
-\- Top Products by Revenue
+- Top Products by Revenue
 
-\- Top Products by Quantity
+- Top Products by Quantity
 
-\- Product Revenue trend
+- Product Revenue trend
 
-\- Impact of non-product transactions such as shipping, vouchers, fees, bad debt, and adjustments
-
-
-
-\---
+- Impact of non-product transactions such as shipping, vouchers, fees, bad debt, and adjustments
 
 
 
-\## 📁 Project Structure
+---
+
+
+
+## 📁 Project Structure
 
 
 
@@ -502,41 +502,41 @@ This page focuses on product and transaction mix:
 
 &#x20;   ├── raw/
 
-&#x20;   │   └── 01\_raw\_to\_staging.sql
+&#x20;   │   └── 01_raw_to_staging.sql
 
 &#x20;   ├── staging/
 
-&#x20;   │   ├── 01\_data\_profiling.sql
+&#x20;   │   ├── 01_data_profiling.sql
 
-&#x20;   │   ├── 02\_staging\_retail\_data\_clean.sql
+&#x20;   │   ├── 02_staging_retail_data_clean.sql
 
-&#x20;   │   └── 03\_staging\_retail\_data\_enrich.sql
+&#x20;   │   └── 03_staging_retail_data_enrich.sql
 
 &#x20;   └── analytics/
 
-&#x20;       ├── 01\_dim\_product.sql
+&#x20;       ├── 01_dim_product.sql
 
-&#x20;       ├── 02\_dim\_customer.sql
+&#x20;       ├── 02_dim_customer.sql
 
-&#x20;       └── 03\_fact\_transactions.sql
-
-
-
-\---
+&#x20;       └── 03_fact_transactions.sql
 
 
 
-\## ✅ Project Outcome
+---
+
+
+
+## ✅ Project Outcome
 
 The final result of the project is:
 
-\- a cleaned and modelled SQL backend
+- a cleaned and modelled SQL backend
 
-\- a star schema for reporting
+- a star schema for reporting
 
-\- a multi-page Power BI report
+- a multi-page Power BI report
 
-\- KPI calculations reflecting both product revenue and non-product transaction impacts
+- KPI calculations reflecting both product revenue and non-product transaction impacts
 
 
 
