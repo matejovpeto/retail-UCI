@@ -428,7 +428,7 @@ Removing all missing-customer rows would have significantly reduced the analytic
 
 ### Overview
 
-![Overview](overview.png)
+![Overview](screenshots/overview.png)
 
 
 
@@ -450,7 +450,7 @@ This page focuses on high-level performance:
 
 ### Customers and Regions
 
-![Customers and Regions](customers-regions.png)
+![Customers and Regions](screenshots/customers-regions.png)
 
 
 
@@ -474,7 +474,7 @@ This page focuses on geographic customer distribution:
 
 ### Product
 
-![Product](product.png)
+![Product](screenshots/product.png)
 
 
 
